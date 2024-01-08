@@ -3,6 +3,7 @@ import static com.badlogic.gdx.graphics.Color.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -26,6 +27,7 @@ public class Main extends ApplicationAdapter {
 	Texture[] meme = new Texture[5];
 	Texture u, he;
 	Texture[] pila = new Texture[3];
+	Texture cat;
 	float w, h;
 	float time=1;
 	float cx=0, cy=0;
@@ -39,7 +41,7 @@ public class Main extends ApplicationAdapter {
 	float stepb=20;
 	float gow=0,gos=0,goa=0,god=0;
 	int id=0;
-	int heal=4;
+	int heal=5;
 	Entity[] e = new Entity[eq];
 	Slice[] s = new Slice[sq];
 	Part[] p = new Part[pq];
@@ -57,8 +59,11 @@ public class Main extends ApplicationAdapter {
 	int an=0;
 	int and=0;
 	int q=0;
+	int mode=0;
+	Sound sound;
 	@Override
 	public void create () {
+		sound = Gdx.audio.newSound(Gdx.files.internal("play.mp3"));
 		for(int i=0;i<5;i++) {
 			office[i] = new Texture("office_"+(i+1)+".png");
 			meme[i] = new Texture((i+1)+".png");
@@ -66,6 +71,7 @@ public class Main extends ApplicationAdapter {
 		for(int i=0;i<3;i++) {
 			pila[i] = new Texture("New"+(i+1)+".png");
 		}
+		cat = new Texture("cat.png");
 		u = new Texture("u.png");
 		he = new Texture("h.png");
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
@@ -304,8 +310,16 @@ public class Main extends ApplicationAdapter {
 			for(int i=0;i<eq;i++){
 				if(e[i].state!=3){
 					if(hit(ix, iy, 5, e[i].x, e[i].y,  fx*step)){
+						boolean access2=true;
 						if(i==id) {
-							Gdx.app.exit();
+							access2=false;
+							if(e[id].damaged<=0) {
+								e[id].damaged = 50;
+								heal--;
+								if (heal <= 0) {
+									exit();
+								}
+							}
 						}
 
 						boolean access=false;
@@ -322,7 +336,7 @@ public class Main extends ApplicationAdapter {
 								}
 							}
 						}
-						if(access) {
+						if(access&&access2) {
 							time/=20;
 							int[][] fs = f[e[i].a];
 							if(e[i].enemy){
@@ -447,85 +461,95 @@ public class Main extends ApplicationAdapter {
 			b[index].state=0;
 		}
 	}
+	public void exit(){
+		mode=1;
+		sound.play();
+	}
 	@Override
 	public void render () {
-		if(and==0) {
-			for (int i = 0; i < pils; i++) {
-				if (hit(pilx[i], pily[i], h/2, e[id].x, e[id].y, h/2)) {
-					float r = random.nextInt(360);
-					slay(pilx[i] + sin(r) * pilse[i]/2, pily[i] + cos(r) * pilse[i]/2, pilx[i] - sin(r) * pilse[i]/2, pily[i] - cos(r) * pilse[i]/2);
+		if (mode==0) {
+			if (and == 0) {
+				for (int i = 0; i < pils; i++) {
+					if (hit(pilx[i], pily[i], h / 2, e[id].x, e[id].y, h / 2)) {
+						float r = random.nextInt(360);
+						slay(pilx[i] + sin(r) * pilse[i] / 5, pily[i] + cos(r) * pilse[i] / 5, pilx[i] - sin(r) * pilse[i] / 5, pily[i] - cos(r) * pilse[i] / 5);
+					}
 				}
 			}
-		}
-		and++;
-		if(and>10){
-			and=0;
-		}
+			and++;
+			if (and > 4) {
+				and = 0;
+			}
 
-		an++;
-		if(an>2){
-			an=0;
-		}
-		time+=(1-time)/100;
-		cx+=w/2;
-		cy+=h/2;
-		cx+=(e[id].x-cx)/2f;
-		cy+=(e[id].y-cy)/2f;
-		cx-=w/2;
-		cy-=h/2;
-		for (int i = 0; i < eq; i++) {
-			e[i].math();
-		}
-		for (int i = 0; i < pq; i++) {
-			p[i].math();
-		}
-		for (int i = 0; i < sq; i++) {
-			s[i].math();
-		}
-		for (int i = 0; i < bq; i++) {
-			b[i].math();
-		}
-		ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
-		batch.begin();
-		for(int i=0;i<roomq;i++){
-		//	batch.draw(office[rooms[i].t], -cx+rooms[i].x*stepb, -cy+rooms[i].y*stepb, stepb*rooms[i].s, stepb*rooms[i].s);
-		}
-		batch.end();
-		drawer.begin(ShapeRenderer.ShapeType.Filled);
-		for (int i = 0; i < eq; i++) {
-			e[i].draw();
-		}
-		for (int i = 0; i < bq; i++) {
-			b[i].draw();
-		}
-		for (int i = 0; i < pq; i++) {
-			p[i].draw();
-		}
-		for (int i = 0; i < sq; i++) {
-			s[i].draw();
-		}
-		int minx=Math.min(Math.max((int)(cx/stepb-1),0),FX);
-		int miny=Math.min(Math.max((int)(cy/stepb-1),0),FY);
-		int maxx=Math.min(Math.max((int)((cx+w)/stepb+1),0),FX);
-		int maxy=Math.min(Math.max((int)((cy+h)/stepb+1),0),FY);
-		for(int ix=minx;ix<maxx;ix++){
-			for(int iy=miny;iy<maxy;iy++){
-				if(F[ix][iy].t!=-1) {
-					drawer.setColor(0, 0, 0, 0);
-					drawer.rect(-cx+ix*stepb, -cy+iy*stepb, stepb, stepb);
+			an++;
+			if (an > 2) {
+				an = 0;
+			}
+			time += (1 - time) / 100;
+			cx += w / 2;
+			cy += h / 2;
+			cx += (e[id].x - cx) / 2f;
+			cy += (e[id].y - cy) / 2f;
+			cx -= w / 2;
+			cy -= h / 2;
+			for (int i = 0; i < eq; i++) {
+				e[i].math();
+			}
+			for (int i = 0; i < pq; i++) {
+				p[i].math();
+			}
+			for (int i = 0; i < sq; i++) {
+				s[i].math();
+			}
+			for (int i = 0; i < bq; i++) {
+				b[i].math();
+			}
+			ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
+			batch.begin();
+			for (int i = 0; i < roomq; i++) {
+				//	batch.draw(office[rooms[i].t], -cx+rooms[i].x*stepb, -cy+rooms[i].y*stepb, stepb*rooms[i].s, stepb*rooms[i].s);
+			}
+			batch.end();
+			drawer.begin(ShapeRenderer.ShapeType.Filled);
+			for (int i = 0; i < eq; i++) {
+				e[i].draw();
+			}
+			for (int i = 0; i < bq; i++) {
+				b[i].draw();
+			}
+			for (int i = 0; i < pq; i++) {
+				p[i].draw();
+			}
+			for (int i = 0; i < sq; i++) {
+				s[i].draw();
+			}
+			int minx = Math.min(Math.max((int) (cx / stepb - 1), 0), FX);
+			int miny = Math.min(Math.max((int) (cy / stepb - 1), 0), FY);
+			int maxx = Math.min(Math.max((int) ((cx + w) / stepb + 1), 0), FX);
+			int maxy = Math.min(Math.max((int) ((cy + h) / stepb + 1), 0), FY);
+			for (int ix = minx; ix < maxx; ix++) {
+				for (int iy = miny; iy < maxy; iy++) {
+					if (F[ix][iy].t != -1) {
+						drawer.setColor(0, 0, 0, 0);
+						drawer.rect(-cx + ix * stepb, -cy + iy * stepb, stepb, stepb);
+					}
 				}
 			}
+			drawer.end();
+			batch.begin();
+			for (int i = 0; i < pils; i++) {
+				batch.draw(pila[an], -cx + pilx[i] - pilse[i] / 2, -cy + pily[i] - pilse[i] / 2, pilse[i], pilse[i]);
+			}
+			batch.draw(u, 0, 0, 400, 400);
+			for (int i = 0; i < heal; i++) {
+				batch.draw(he, i * 100, h - 100, 100, 50);
+			}
+			batch.end();
+		}else{
+			batch.begin();
+			batch.draw(cat, 0, 0, w, h);
+			batch.end();
 		}
-		drawer.end();
-		batch.begin();
-		for(int i=0;i<pils;i++){
-			batch.draw(pila[an], -cx+pilx[i]-pilse[i]/2, -cy+pily[i]-pilse[i]/2, pilse[i], pilse[i]);
-		}
-		batch.draw(u, 0, 0, 400, 400);
-		for(int i=0;i<heal;i++){
-			batch.draw(he, i*100, h-100, 100, 50);
-		}
-		batch.end();
 	}
 	public float sin(float v){
 		return (float)Math.sin(v*Math.PI/180);

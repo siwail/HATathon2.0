@@ -85,9 +85,9 @@ public class Entity {
             //r-=vx/10;
             if (enemy) {
                 if (moved <= 0) {
-                    moved = g.random.nextInt(100);
-                    vx -= g.GetVX(x, y, g.e[g.id].x, g.e[g.id].y) * 20;
-                    vy -= g.GetVY(x, y, g.e[g.id].x, g.e[g.id].y) * 20;
+                    moved = g.random.nextInt(50);
+                    vx -= g.GetVX(x, y, g.e[g.id].x, g.e[g.id].y) * 25;
+                    vy -= g.GetVY(x, y, g.e[g.id].x, g.e[g.id].y) * 25;
                 } else {
                     moved--;
                 }
@@ -104,11 +104,11 @@ public class Entity {
                     damaged--;
                 }
                 for (int i = 0; i < g.eq; i++) {
-                    if (g.e[i].state != 3 && g.e[i].id != g.id && g.hit(x, y, 50, g.e[i].x, g.e[i].y, 50) && damaged == 0) {
+                    if (g.e[i].state != 3 && g.e[i].id != g.id && g.hit(x, y, 20, g.e[i].x, g.e[i].y, 20) && damaged == 0) {
                         damaged = 50;
                         g.heal--;
                         if(g.heal<=0){
-                            Gdx.app.exit();
+                            g.exit();
                         }
                     }
                 }
@@ -194,7 +194,7 @@ public class Entity {
                     vx = -vx / 2;
                 }
                 int px3 = (int) (x / g.stepb);
-                int py3 = (int) (y / g.stepb) - 4;
+                int py3 = (int) (y / g.stepb) - 10;
                 if (g.act(px3, py3) && g.F[px3][py3].t != -1) {
                     y = ly;
                     vy = -vy / 2;
