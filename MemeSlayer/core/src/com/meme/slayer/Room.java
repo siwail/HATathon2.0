@@ -34,7 +34,7 @@ public class Room {
             exitx=x-s;
             exity=y-s;
         }
-
+        g.set_entity((exitx+5)*g.stepb,(exity+5)*g.stepb);
         if(t==0){
             g.frect(x+10, y+30, x+15, y+32, 0);
             g.frect(x+30, y+30, x+45, y+32, 0);

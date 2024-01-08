@@ -13,6 +13,8 @@ public class Entity {
     int direct=1;
     int state1=0, state2=0, state3=0;
     int id=0;
+    int damaged=0;
+    int moved=100;
     boolean enemy=true;
     boolean spaced=false;
     public Entity(Main game){
@@ -22,7 +24,6 @@ public class Entity {
     public void math(){
         if(state!=3) {
             if (!enemy) {
-
                 next--;
                 if (next == 0) {
                     next = 10;
@@ -61,8 +62,8 @@ public class Entity {
                         }
                     }
                 }
-            }else{
-                if(t==0) {
+            } else {
+                if (t == 0) {
                     next--;
                     if (next == 0) {
                         next = 10;
@@ -71,71 +72,141 @@ public class Entity {
                             a = 0;
                         }
                     }
-                }else {
-                    r=180;
-                    a = 46+t;
+                } else {
+                    r = 180;
+                    a = 46 + t;
                 }
             }
-            vy-=0.5f;
-            if(id==g.id) {
+            vy -= 0.5f;
+            if (id == g.id) {
                 vx += g.goa + g.god;
             }
             //r+=(90-r)/5f;
             //r-=vx/10;
-            vx+=(-vx)/5;
-            lx=x;
-            ly=y;
-            x+=vx;
-            y+=vy;
-            spaced=false;
-
-
-            int px5 = (int) (x / g.stepb)+3;
-            int py5 = (int) (y / g.stepb)-6;
-            if (g.act(px5, py5) && g.F[px5][py5].t != -1) {
-                x = lx;
-                x-=2;
-                vx = -vx / 2;
+            if (enemy) {
+                if (moved <= 0) {
+                    moved = g.random.nextInt(100);
+                    vx -= g.GetVX(x, y, g.e[g.id].x, g.e[g.id].y) * 20;
+                    vy -= g.GetVY(x, y, g.e[g.id].x, g.e[g.id].y) * 20;
+                } else {
+                    moved--;
+                }
             }
-            int px6 = (int) (x / g.stepb)-3;
-            int py6 = (int) (y / g.stepb)-6;
-            if (g.act(px6, py6) && g.F[px6][py6].t != -1) {
-                x = lx;
-                x+=2;
-                vx = -vx / 2;
+            vx += (-vx) / 5;
+            lx = x;
+            ly = y;
+            x += vx;
+            y += vy;
+            spaced = false;
+
+            if (id == g.id) {
+                if (damaged > 0) {
+                    damaged--;
+                }
+                for (int i = 0; i < g.eq; i++) {
+                    if (g.e[i].state != 3 && g.e[i].id != g.id && g.hit(x, y, 50, g.e[i].x, g.e[i].y, 50) && damaged == 0) {
+                        damaged = 50;
+                        g.heal--;
+
+                    }
+                }
             }
+            if (!enemy) {
+                int px5 = (int) (x / g.stepb) + 3;
+                int py5 = (int) (y / g.stepb) - 6;
+                if (g.act(px5, py5) && g.F[px5][py5].t != -1) {
+                    x = lx;
+                    x -= 2;
+                    vx = -vx / 2;
+                }
+                int px6 = (int) (x / g.stepb) - 3;
+                int py6 = (int) (y / g.stepb) - 6;
+                if (g.act(px6, py6) && g.F[px6][py6].t != -1) {
+                    x = lx;
+                    x += 2;
+                    vx = -vx / 2;
+                }
 
 
-            int px1 = (int) (x / g.stepb)+3;
-            int py1 = (int) (y / g.stepb)+4;
-            if (g.act(px1, py1) && g.F[px1][py1].t != -1) {
-                x = lx;
-                x-=2;
-                vx = -vx / 2;
-            }
-            int px2 = (int) (x / g.stepb)-3;
-            int py2 = (int) (y / g.stepb)+4;
-            if (g.act(px2, py2) && g.F[px2][py2].t != -1) {
-                x = lx;
+                int px1 = (int) (x / g.stepb) + 3;
+                int py1 = (int) (y / g.stepb) + 4;
+                if (g.act(px1, py1) && g.F[px1][py1].t != -1) {
+                    x = lx;
+                    x -= 2;
+                    vx = -vx / 2;
+                }
+                int px2 = (int) (x / g.stepb) - 3;
+                int py2 = (int) (y / g.stepb) + 4;
+                if (g.act(px2, py2) && g.F[px2][py2].t != -1) {
+                    x = lx;
 
-                x+=2;
-                vx = -vx / 2;
-            }
-            int px3 = (int) (x / g.stepb);
-            int py3 = (int) (y / g.stepb)-8;
-            if (g.act(px3, py3) && g.F[px3][py3].t != -1) {
-                y = ly;
-                vy = -vy / 4;
-                spaced=true;
-            }
-            int px4 = (int) (x / g.stepb);
-            int py4 = (int) (y / g.stepb)+2;
-            if (g.act(px4, py4) && g.F[px4][py4].t != -1) {
+                    x += 2;
+                    vx = -vx / 2;
+                }
+                int px3 = (int) (x / g.stepb);
+                int py3 = (int) (y / g.stepb) - 8;
+                if (g.act(px3, py3) && g.F[px3][py3].t != -1) {
+                    y = ly;
+                    vy = -vy / 4;
+                    spaced = true;
+                }
+                int px4 = (int) (x / g.stepb);
+                int py4 = (int) (y / g.stepb) + 2;
+                if (g.act(px4, py4) && g.F[px4][py4].t != -1) {
 
-                y = ly;
-                y-=2;
-                vy = -vy / 8;
+                    y = ly;
+                    y -= 2;
+                    vy = -vy / 8;
 
+                }
+            }else{
+                int px5 = (int) (x / g.stepb) + 4;
+                int py5 = (int) (y / g.stepb) - 4;
+                if (g.act(px5, py5) && g.F[px5][py5].t != -1) {
+                    x = lx;
+                    x -= 2;
+                    vx = -vx / 2;
+                }
+                int px6 = (int) (x / g.stepb) - 4;
+                int py6 = (int) (y / g.stepb) - 4;
+                if (g.act(px6, py6) && g.F[px6][py6].t != -1) {
+                    x = lx;
+                    x += 2;
+                    vx = -vx / 2;
+                }
+
+
+                int px1 = (int) (x / g.stepb) + 4;
+                int py1 = (int) (y / g.stepb) + 4;
+                if (g.act(px1, py1) && g.F[px1][py1].t != -1) {
+                    x = lx;
+                    x -= 2;
+                    vx = -vx / 2;
+                }
+                int px2 = (int) (x / g.stepb) - 4;
+                int py2 = (int) (y / g.stepb) + 4;
+                if (g.act(px2, py2) && g.F[px2][py2].t != -1) {
+                    x = lx;
+
+                    x += 2;
+                    vx = -vx / 2;
+                }
+                int px3 = (int) (x / g.stepb);
+                int py3 = (int) (y / g.stepb) - 4;
+                if (g.act(px3, py3) && g.F[px3][py3].t != -1) {
+                    y = ly;
+                    vy = -vy / 2;
+                    spaced = true;
+                }
+                int px4 = (int) (x / g.stepb);
+                int py4 = (int) (y / g.stepb) + 4;
+                if (g.act(px4, py4) && g.F[px4][py4].t != -1) {
+
+                    y = ly;
+                    y -= 2;
+                    vy = -vy / 2;
+
+                }
             }
         }
     }
@@ -146,29 +217,58 @@ public class Entity {
                     if(g.id!=id){
                         dirx=x;
                     }
-                    for (int ix = 0; ix < g.fx; ix++) {
-                        for (int iy = 0; iy < g.fy; iy++) {
-                            if (g.f[a][ix][iy] != -1) {
-                                if (g.f[a][ix][iy] == 0) {
-                                    g.drawer.setColor(0, 0, 0, 1);
-                                }
-                                if (g.f[a][ix][iy] == 1) {
-                                    g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
-                                }
-                                if (g.f[a][ix][iy] == 2) {
-                                    g.drawer.setColor(1, 1, 1, 1);
-                                }
-                                float p1x = -g.cx + dirx + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
-                                float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p2x = -g.cx + dirx + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
-                                float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p3x = -g.cx + dirx + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
-                                float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p4x = -g.cx + dirx + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
-                                float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
-                                g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
+                    if(damaged==0) {
+                        for (int ix = 0; ix < g.fx; ix++) {
+                            for (int iy = 0; iy < g.fy; iy++) {
+                                if (g.f[a][ix][iy] != -1) {
+                                    if (g.f[a][ix][iy] == 0) {
+                                        g.drawer.setColor(0, 0, 0, 1);
+                                    }
+                                    if (g.f[a][ix][iy] == 1) {
+                                        g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
+                                    }
+                                    if (g.f[a][ix][iy] == 2) {
+                                        g.drawer.setColor(1, 1, 1, 1);
+                                    }
+                                    float p1x = -g.cx + dirx + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix * direct + g.sin(r + 90) * g.step * iy * direct;
+                                    float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                    float p2x = -g.cx + dirx + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix * direct + g.sin(r + 90) * g.step * iy * direct;
+                                    float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                    float p3x = -g.cx + dirx + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix * direct + g.sin(r + 90) * g.step * iy * direct;
+                                    float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                    float p4x = -g.cx + dirx + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix * direct + g.sin(r + 90) * g.step * iy * direct;
+                                    float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                    g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
+                                    g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
 
+                                }
+                            }
+                        }
+                    }else{
+                        for (int ix = 0; ix < g.fx; ix++) {
+                            for (int iy = 0; iy < g.fy; iy++) {
+                                if (g.f[3][ix][iy] != -1) {
+                                    if (g.f[3][ix][iy] == 0) {
+                                        g.drawer.setColor(0, 0, 0, 1);
+                                    }
+                                    if (g.f[3][ix][iy] == 1) {
+                                        g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
+                                    }
+                                    if (g.f[3][ix][iy] == 2) {
+                                        g.drawer.setColor(1, 1, 1, 1);
+                                    }
+                                    float p1x = -g.cx + dirx + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix * direct + g.sin(r + 90) * g.step * iy * direct;
+                                    float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                    float p2x = -g.cx + dirx + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix * direct + g.sin(r + 90) * g.step * iy * direct;
+                                    float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                    float p3x = -g.cx + dirx + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix * direct + g.sin(r + 90) * g.step * iy * direct;
+                                    float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                    float p4x = -g.cx + dirx + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix * direct + g.sin(r + 90) * g.step * iy * direct;
+                                    float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                    g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
+                                    g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
+
+                                }
                             }
                         }
                     }

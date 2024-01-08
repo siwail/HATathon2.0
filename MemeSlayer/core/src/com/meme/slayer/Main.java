@@ -24,7 +24,7 @@ public class Main extends ApplicationAdapter {
 	BitmapFont font;
 	Texture[] office = new Texture[5];
 	Texture[] meme = new Texture[5];
-	Texture u;
+	Texture u, he;
 	float w, h;
 	float time=1;
 	float cx=0, cy=0;
@@ -38,6 +38,7 @@ public class Main extends ApplicationAdapter {
 	float stepb=20;
 	float gow=0,gos=0,goa=0,god=0;
 	int id=0;
+	int heal=4;
 	Entity[] e = new Entity[eq];
 	Slice[] s = new Slice[sq];
 	Part[] p = new Part[pq];
@@ -45,7 +46,7 @@ public class Main extends ApplicationAdapter {
 	int FX=500;
 	int FY=500;
 	Frame[][] F = new Frame[FX][FY];
-	int roomq=20;
+	int roomq=50;
 	Room[] rooms = new Room[roomq];
 	@Override
 	public void create () {
@@ -54,6 +55,7 @@ public class Main extends ApplicationAdapter {
 			meme[i] = new Texture((i+1)+".png");
 		}
 		u = new Texture("u.png");
+		he = new Texture("h.png");
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		random = new Random();
 		w=Gdx.graphics.getWidth();
@@ -483,6 +485,9 @@ public class Main extends ApplicationAdapter {
 		drawer.end();
 		batch.begin();
 		batch.draw(u, 0, 0, 400, 400);
+		for(int i=0;i<heal;i++){
+			batch.draw(he, i*100, h-100, 100, 50);
+		}
 		batch.end();
 	}
 	public float sin(float v){
