@@ -83,7 +83,7 @@ public class Part {
                             g.drawer.setColor(1, 1, 1, 1);
                         }
                         if (f[ix][iy] == 3) {
-                            g.drawer.setColor(0.5f, 0, 0, 1);
+                            g.drawer.setColor(0.1f, 0.5f, 0, 1);
                         }
                         float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
                         float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
