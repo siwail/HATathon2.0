@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 
 public class Entity {
     Main g;
-    float x=520, y=600, lx=0, ly=0, vx=0, vy=0, r=90, lr=0;
+    float x=520, y=800, lx=0, ly=0, vx=0, vy=0, r=90, lr=0;
     int state=3, a=0, a1=4, a2=11, a3=18;
     int next=10, next1=3, next2=3, next3=3;
     int dir=1, dir1=1, dir2=1, dir3=1;
@@ -80,14 +80,14 @@ public class Entity {
             y+=vy;
             spaced=false;
 
-            int px1 = (int) (x / g.stepb)+8;
+            int px1 = (int) (x / g.stepb)+6;
             int py1 = (int) (y / g.stepb);
             if (g.act(px1, py1) && g.F[px1][py1].t != -1) {
                 x = lx;
                 vx = -vx / 2;
                 spaced=true;
             }
-            int px2 = (int) (x / g.stepb)-8;
+            int px2 = (int) (x / g.stepb);
             int py2 = (int) (y / g.stepb);
             if (g.act(px2, py2) && g.F[px2][py2].t != -1) {
                 x = lx;

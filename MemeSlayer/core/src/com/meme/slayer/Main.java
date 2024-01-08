@@ -41,7 +41,7 @@ public class Main extends ApplicationAdapter {
 	int FX=500;
 	int FY=500;
 	Frame[][] F = new Frame[FX][FY];
-	int roomq=10;
+	int roomq=1;
 	Room[] rooms = new Room[roomq];
 	@Override
 	public void create () {
@@ -95,11 +95,11 @@ public class Main extends ApplicationAdapter {
 			ix=rooms[i].exitx;
 			iy=rooms[i].exity;
 		}
-		RoomGenerator generatorr = new RoomGenerator();
+		//RoomGenerator generatorr = new RoomGenerator();
 		//List<Room> rooms = generatorr.generateRooms(10);
 		for (int i=0;i<eq;i++){
 			e[i]=new Entity(this);
-			e[i].x=i*100;
+			e[i].x=i*100+100;
 			e[i].state=0;
 			int m = random.nextInt(3);
 			if(m==0){

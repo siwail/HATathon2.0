@@ -14,7 +14,7 @@ public class Room {
         this.y=y;
         exit = g.random.nextInt(8);
         g.frect(x, y, x+s, y+s, 0);
-        g.frect(x+2, y+2, x+s-2, y+s-2, -1);
+        g.frect(x+3, y+3, x+s-3, y+s-3, -1);
         if(exit==0){
 
         }
