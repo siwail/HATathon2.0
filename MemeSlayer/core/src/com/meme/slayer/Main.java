@@ -86,19 +86,20 @@ public class Main extends ApplicationAdapter {
 		for(int ix=0;ix<FX;ix++){
 			for(int iy=0;iy<FY;iy++){
 				F[ix][iy] = new Frame();
-				F[ix][iy].t=-1;
-				if(iy<5){
-					F[ix][iy].t=0;
-				}
+				F[ix][iy].t=0;
+
 			}
 		}
 		int scale=50;
-		int ix=0;
+		int ix=200;
 		int iy=200;
 		for(int i=0;i<roomq;i++){
 			rooms[i]= new Room(this, ix, iy, scale, random.nextInt(2));
 			ix=rooms[i].exitx;
 			iy=rooms[i].exity;
+		}
+		for(int i=0;i<roomq;i++){
+			rooms[i].generate_exit();
 		}
 		//RoomGenerator generatorr = new RoomGenerator();
 		//List<Room> rooms = generatorr.generateRooms(10);
@@ -121,7 +122,7 @@ public class Main extends ApplicationAdapter {
 		e[id].enemy=false;
 		e[id].state=0;
 		e[id].x=rooms[0].x*stepb+200;
-		e[id].y=rooms[0].y*stepb+200;
+		e[id].y=rooms[0].y*stepb+220;
 		for (int i=0;i<sq;i++){
 			s[i]=new Slice(this);
 		}
@@ -149,16 +150,16 @@ public class Main extends ApplicationAdapter {
 					}
 				}
 				if(keycode==51){
-					gow=1;
+					gow=3;
 				}
 				if(keycode==29){
-					goa=-1;
+					goa=-3;
 				}
 				if(keycode==47){
-					gos=-1;
+					gos=-3;
 				}
 				if(keycode==32){
-					god=1;
+					god=3;
 				}
 				return false;
 			}
@@ -362,8 +363,8 @@ public class Main extends ApplicationAdapter {
 		time+=(1-time)/100;
 		cx+=w/2;
 		cy+=h/2;
-		cx+=(e[id].x-cx)/20f;
-		cy+=(e[id].y-cy)/20f;
+		cx+=(e[id].x-cx)/2f;
+		cy+=(e[id].y-cy)/2f;
 		cx-=w/2;
 		cy-=h/2;
 		for (int i = 0; i < eq; i++) {
@@ -378,7 +379,7 @@ public class Main extends ApplicationAdapter {
 		for (int i = 0; i < bq; i++) {
 			b[i].math();
 		}
-		ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1);
+		ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
 		batch.begin();
 		for(int i=0;i<roomq;i++){
 			batch.draw(office[rooms[i].t], -cx+rooms[i].x*stepb, -cy+rooms[i].y*stepb, stepb*rooms[i].s, stepb*rooms[i].s);
@@ -397,8 +398,12 @@ public class Main extends ApplicationAdapter {
 		for (int i = 0; i < sq; i++) {
 			s[i].draw();
 		}
-		for(int ix=0;ix<FX;ix++){
-			for(int iy=0;iy<FY;iy++){
+		int minx=Math.min(Math.max((int)(cx/stepb-1),0),FX);
+		int miny=Math.min(Math.max((int)(cy/stepb-1),0),FY);
+		int maxx=Math.min(Math.max((int)((cx+w)/stepb+1),0),FX);
+		int maxy=Math.min(Math.max((int)((cy+h)/stepb+1),0),FY);
+		for(int ix=minx;ix<maxx;ix++){
+			for(int iy=miny;iy<maxy;iy++){
 				if(F[ix][iy].t!=-1) {
 					drawer.setColor(0, 0, 0, 0);
 					drawer.rect(-cx+ix*stepb, -cy+iy*stepb, stepb, stepb);

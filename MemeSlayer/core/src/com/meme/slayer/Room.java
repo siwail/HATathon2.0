@@ -17,6 +17,7 @@ public class Room {
         exit = g.random.nextInt(4);
         g.frect(x, y, x+s, y+s, 0);
         g.frect(x+3, y+3, x+s-3, y+s-3, -1);
+
         if(exit==0){
             exitx=x+s;
             exity=y+s;
@@ -33,12 +34,26 @@ public class Room {
             exitx=x-s;
             exity=y-s;
         }
-        g.frect(exitx-5, exity-5, exitx+5, exity+5, -1);
+
         if(t==0){
 
         }
         if(t==1){
 
+        }
+    }
+    public void generate_exit(){
+        if(exit==0){
+            g.frect(exitx-20+3, exity-20+3, exitx+20-3, exity+20-3, -1);
+        }
+        if(exit==1){
+            g.frect(exitx-20+3, exity-10+s+3, exitx+20-3, exity+20+s-3, -1);
+        }
+        if(exit==2){
+            g.frect(exitx-20+s+3, exity-20+3, exitx+20+s-3, exity+20-3, -1);
+        }
+        if(exit==3){
+            g.frect(exitx-20+s+3, exity-20+s+3, exitx+20+s-3, exity+20+s-3, -1);
         }
     }
 }

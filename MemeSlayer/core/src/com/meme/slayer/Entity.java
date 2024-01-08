@@ -72,23 +72,22 @@ public class Entity {
             vy-=0.5f;
             if(id==g.id) {
                 vx += g.goa + g.god;
-                vy += g.gow + g.gos;
             }
-            vx+=(-vx)/10;
+            vx+=(-vx)/5;
             lx=x;
             ly=y;
             x+=vx;
             y+=vy;
             spaced=false;
 
-            int px1 = (int) (x / g.stepb)+6;
-            int py1 = (int) (y / g.stepb);
+            int px1 = (int) (x / g.stepb)+3;
+            int py1 = (int) (y / g.stepb)-10;
             if (g.act(px1, py1) && g.F[px1][py1].t != -1) {
                 x = lx;
                 vx = -vx / 2;
             }
-            int px2 = (int) (x / g.stepb);
-            int py2 = (int) (y / g.stepb);
+            int px2 = (int) (x / g.stepb)-3;
+            int py2 = (int) (y / g.stepb)-10;
             if (g.act(px2, py2) && g.F[px2][py2].t != -1) {
                 x = lx;
                 vx = -vx / 2;
