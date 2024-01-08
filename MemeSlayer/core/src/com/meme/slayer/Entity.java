@@ -10,6 +10,7 @@ public class Entity {
     int dir=1, dir1=1, dir2=1, dir3=1;
     int state1=0, state2=0, state3=0;
     boolean enemy=true;
+    boolean spaced=false;
     public Entity(Main game){
         g=game;
 
@@ -67,24 +68,30 @@ public class Entity {
                 }
             }
             vy-=0.5f;
+            vx+=g.goa+g.god;
+            vy+=g.gow+g.gos;
+            vx+=(-vx)/10;
             lx=x;
             ly=y;
             x+=vx;
             y+=vy;
+            spaced=false;
             for(int ix=-8;ix<8;ix++) {
                 for(int iy=-8;iy<8;iy++) {
                     int px = (int) (x / g.stepb)+ix;
                     int py = (int) (y / g.stepb)+iy;
                     if (g.act(px, py) && g.F[px][py].t != -1) {
-                        y = ly;
                         x = lx;
+                        y = ly+1;
                         vx = -vx / 2;
                         vy = -vy / 2;
                         ix=8;
                         iy=8;
+                        spaced=true;
                     }
                 }
             }
+
         }
     }
     public void draw(){

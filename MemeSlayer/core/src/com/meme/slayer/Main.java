@@ -32,6 +32,7 @@ public class Main extends ApplicationAdapter {
 	int eq=20, pq=1000, sq=100, bq=1000;
 	float step=5;
 	float stepb=20;
+	float gow=0,gos=0,goa=0,god=0;
 	int id=0;
 	Entity[] e = new Entity[eq];
 	Slice[] s = new Slice[sq];
@@ -120,13 +121,36 @@ public class Main extends ApplicationAdapter {
 			boolean unmove=false;
 			@Override
 			public boolean keyDown(int keycode) {
-
+				Gdx.app.log(""+keycode, "");
+				if(keycode==51){
+					gow=1;
+				}
+				if(keycode==29){
+					goa=-1;
+				}
+				if(keycode==47){
+					gos=-1;
+				}
+				if(keycode==32){
+					god=1;
+				}
 				return false;
 			}
 
 			@Override
 			public boolean keyUp(int keycode) {
-
+				if(keycode==51){
+					gow=0;
+				}
+				if(keycode==29){
+					goa=0;
+				}
+				if(keycode==47){
+					gos=0;
+				}
+				if(keycode==32){
+					god=0;
+				}
 				return false;
 			}
 
