@@ -17,6 +17,13 @@ public class Main extends ApplicationAdapter {
 	FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 	BitmapFont font;
 	float w, h;
+	float time=1;
+	float cx=0, cy=0;
+	int eq=20, pq=1000, bq=1000;
+	float step=10;
+	Entity[] e = new Entity[eq];
+	Part[] p = new Part[pq];
+	Blood[] b = new Blood[bq];
 	@Override
 	public void create () {
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
@@ -61,7 +68,7 @@ public class Main extends ApplicationAdapter {
 
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
-				//p[0].rz=lrz+(my-h/2)/10f;
+
 				return false;
 			}
 
@@ -84,5 +91,10 @@ public class Main extends ApplicationAdapter {
 			drawer.begin(ShapeRenderer.ShapeType.Filled);
 			drawer.end();
 	}
-
+	public float sin(float v){
+		return (float)Math.sin(v*Math.PI/180);
+	}
+	public float cos(float v){
+		return (float)Math.cos(v*Math.PI/180);
+	}
 }
