@@ -59,8 +59,8 @@ public class Part {
             vy -= 0.5f*g.time;
             x += vx*g.time;
             y += vy*g.time;
-            if (y < -100) {
-                y=-100;
+            if (y < -400) {
+                y=-400;
                 vy=-vy/2;
                 vx/=2;
                 rd/=2;

@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -21,6 +22,8 @@ public class Main extends ApplicationAdapter {
 	FreeTypeFontGenerator generator;
 	FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 	BitmapFont font;
+	Texture[] office = new Texture[5];
+
 	float w, h;
 	float time=1;
 	float cx=0, cy=0;
@@ -41,10 +44,13 @@ public class Main extends ApplicationAdapter {
 	int FX=500;
 	int FY=500;
 	Frame[][] F = new Frame[FX][FY];
-	int roomq=1;
+	int roomq=3;
 	Room[] rooms = new Room[roomq];
 	@Override
 	public void create () {
+		for(int i=0;i<5;i++) {
+			office[i] = new Texture("office_"+(i+1)+".png");
+		}
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		random = new Random();
 		w=Gdx.graphics.getWidth();
@@ -86,10 +92,9 @@ public class Main extends ApplicationAdapter {
 				}
 			}
 		}
-		int scale=100;
+		int scale=50;
 		int ix=0;
-		int iy=0;
-		int last_exit=-1;
+		int iy=200;
 		for(int i=0;i<roomq;i++){
 			rooms[i]= new Room(this, ix, iy, scale, random.nextInt(2));
 			ix=rooms[i].exitx;
@@ -100,7 +105,6 @@ public class Main extends ApplicationAdapter {
 		for (int i=0;i<eq;i++){
 			e[i]=new Entity(this);
 			e[i].x=i*100+100;
-			e[i].state=0;
 			int m = random.nextInt(3);
 			if(m==0){
 				e[i].state1=1;
@@ -114,6 +118,10 @@ public class Main extends ApplicationAdapter {
 			e[i].enemy=random.nextBoolean();
 			e[i].id=i;
 		}
+		e[id].enemy=false;
+		e[id].state=0;
+		e[id].x=rooms[0].x*stepb+200;
+		e[id].y=rooms[0].y*stepb+200;
 		for (int i=0;i<sq;i++){
 			s[i]=new Slice(this);
 		}
@@ -200,6 +208,13 @@ public class Main extends ApplicationAdapter {
 
 			@Override
 			public boolean mouseMoved(int screenX, int screenY) {
+				mx=screenX;
+				my=h-screenY;
+				if(e[id].x-cx<mx){
+					e[id].direct=1;
+				}else{
+					e[id].direct=-1;
+				}
 
 				return false;
 			}
@@ -363,7 +378,12 @@ public class Main extends ApplicationAdapter {
 		for (int i = 0; i < bq; i++) {
 			b[i].math();
 		}
-		ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
+		ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1);
+		batch.begin();
+		for(int i=0;i<roomq;i++){
+			batch.draw(office[rooms[i].t], -cx+rooms[i].x*stepb, -cy+rooms[i].y*stepb, stepb*rooms[i].s, stepb*rooms[i].s);
+		}
+		batch.end();
 		drawer.begin(ShapeRenderer.ShapeType.Filled);
 		for (int i = 0; i < eq; i++) {
 			e[i].draw();

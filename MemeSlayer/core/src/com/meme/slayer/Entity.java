@@ -8,6 +8,7 @@ public class Entity {
     int state=3, a=0, a1=4, a2=11, a3=18;
     int next=10, next1=3, next2=3, next3=3;
     int dir=1, dir1=1, dir2=1, dir3=1;
+    int direct=1;
     int state1=0, state2=0, state3=0;
     int id=0;
     boolean enemy=true;
@@ -85,14 +86,12 @@ public class Entity {
             if (g.act(px1, py1) && g.F[px1][py1].t != -1) {
                 x = lx;
                 vx = -vx / 2;
-                spaced=true;
             }
             int px2 = (int) (x / g.stepb);
             int py2 = (int) (y / g.stepb);
             if (g.act(px2, py2) && g.F[px2][py2].t != -1) {
                 x = lx;
                 vx = -vx / 2;
-                spaced=true;
             }
             int px3 = (int) (x / g.stepb);
             int py3 = (int) (y / g.stepb)-8;
@@ -113,32 +112,33 @@ public class Entity {
     public void draw(){
         if(state!=3) {
             if (!enemy) {
-                for (int ix = 0; ix < g.fx; ix++) {
-                    for (int iy = 0; iy < g.fy; iy++) {
-                        if (g.f[a][ix][iy] != -1) {
-                            if (g.f[a][ix][iy] == 0) {
-                                g.drawer.setColor(0, 0, 0, 1);
-                            }
-                            if (g.f[a][ix][iy] == 1) {
-                                g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
-                            }
-                            if (g.f[a][ix][iy] == 2) {
-                                g.drawer.setColor(1, 1, 1, 1);
-                            }
-                            float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p2x = -g.cx + x + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p3x = -g.cx + x + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p4x = -g.cx + x + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
-                            g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
+                    float dirx=x+ g.step*16*direct*-1;
+                    for (int ix = 0; ix < g.fx; ix++) {
+                        for (int iy = 0; iy < g.fy; iy++) {
+                            if (g.f[a][ix][iy] != -1) {
+                                if (g.f[a][ix][iy] == 0) {
+                                    g.drawer.setColor(0, 0, 0, 1);
+                                }
+                                if (g.f[a][ix][iy] == 1) {
+                                    g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
+                                }
+                                if (g.f[a][ix][iy] == 2) {
+                                    g.drawer.setColor(1, 1, 1, 1);
+                                }
+                                float p1x = -g.cx + dirx + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
+                                float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p2x = -g.cx + dirx + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
+                                float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p3x = -g.cx + dirx + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
+                                float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p4x = -g.cx + dirx + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
+                                float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
+                                g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
 
+                            }
                         }
                     }
-                }
                 if (state3 == 1) {
                     for (int ix = 0; ix < g.fx; ix++) {
                         for (int iy = 0; iy < g.fy; iy++) {
@@ -152,14 +152,14 @@ public class Entity {
                                 if (g.f[a3][ix][iy] == 2) {
                                     g.drawer.setColor(1, 1, 1, 1);
                                 }
-                                float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                                float p1y = -g.cy + y - g.step * 3 + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p2x = -g.cx + x + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                                float p2y = -g.cy + y - g.step * 3 + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p3x = -g.cx + x + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                                float p3y = -g.cy + y - g.step * 3 + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p4x = -g.cx + x + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                                float p4y = -g.cy + y - g.step * 3 + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p1x = -g.cx + dirx + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
+                                float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p2x = -g.cx + dirx + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
+                                float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p3x = -g.cx + dirx + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
+                                float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p4x = -g.cx + dirx + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
+                                float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
                                 g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
                                 g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
 
@@ -180,13 +180,13 @@ public class Entity {
                                 if (g.f[a2][ix][iy] == 2) {
                                     g.drawer.setColor(1, 1, 1, 1);
                                 }
-                                float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p1x = -g.cx + dirx + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
                                 float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p2x = -g.cx + x + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p2x = -g.cx + dirx + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
                                 float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p3x = -g.cx + x + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p3x = -g.cx + dirx + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
                                 float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p4x = -g.cx + x + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p4x = -g.cx + dirx + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
                                 float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
                                 g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
                                 g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
@@ -208,13 +208,13 @@ public class Entity {
                                 if (g.f[a1][ix][iy] == 2) {
                                     g.drawer.setColor(1, 1, 1, 1);
                                 }
-                                float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p1x = -g.cx + dirx + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
                                 float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p2x = -g.cx + x + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p2x = -g.cx + dirx + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
                                 float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p3x = -g.cx + x + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p3x = -g.cx + dirx + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
                                 float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                                float p4x = -g.cx + x + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p4x = -g.cx + dirx + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix*direct + g.sin(r + 90) * g.step * iy*direct;
                                 float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
                                 g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
                                 g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
