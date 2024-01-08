@@ -23,7 +23,7 @@ public class Main extends ApplicationAdapter {
 	FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 	BitmapFont font;
 	Texture[] office = new Texture[5];
-
+	Texture[] meme = new Texture[5];
 	float w, h;
 	float time=1;
 	float cx=0, cy=0;
@@ -36,7 +36,7 @@ public class Main extends ApplicationAdapter {
 	float step=5;
 	float stepb=20;
 	float gow=0,gos=0,goa=0,god=0;
-	int id=2;
+	int id=0;
 	Entity[] e = new Entity[eq];
 	Slice[] s = new Slice[sq];
 	Part[] p = new Part[pq];
@@ -50,6 +50,7 @@ public class Main extends ApplicationAdapter {
 	public void create () {
 		for(int i=0;i<5;i++) {
 			office[i] = new Texture("office_"+(i+1)+".png");
+			meme[i] = new Texture((i+1)+".png");
 		}
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		random = new Random();
@@ -57,8 +58,8 @@ public class Main extends ApplicationAdapter {
 		h=Gdx.graphics.getHeight();
 		FileHandle textures = Gdx.files.internal("texture.txt");
 		InputStream textures_stream = textures.read();
-		f = new int[28][fx][fy];
-		int j=0, maxj=28;
+		f = new int[52][fx][fy];
+		int j=0, maxj=52;
 		while (j<maxj){
 			for (int ix = 0; ix < fx; ix++) {
 				for (int iy = 0; iy < fy; iy++) {
@@ -87,21 +88,10 @@ public class Main extends ApplicationAdapter {
 			for(int iy=0;iy<FY;iy++){
 				F[ix][iy] = new Frame();
 				F[ix][iy].t=0;
-
 			}
 		}
-		for (int i=0;i<eq;i++) {
-			e[i] = new Entity(this);
-		}
-		int scale=50;
-		int ix=200;
-		int iy=200;
-		for(int i=0;i<roomq;i++){
-			rooms[i]= new Room(this, ix, iy, scale, random.nextInt(2));
-			ix=rooms[i].exitx;
-			iy=rooms[i].exity;
-		}
 		for (int i=0;i<eq;i++){
+			e[i] = new Entity(this);
 			e[i].x=i*100+100;
 			int m = random.nextInt(3);
 			if(m==0){
@@ -113,10 +103,20 @@ public class Main extends ApplicationAdapter {
 			if(m==2){
 				e[i].state3=1;
 			}
-			e[i].enemy=random.nextBoolean();
+			e[i].enemy=true;
 			e[i].id=i;
 			e[i].state=3;
+			e[i].t=random.nextInt(5);
 		}
+		int scale=50;
+		int ix=200;
+		int iy=200;
+		for(int i=0;i<roomq;i++){
+			rooms[i]= new Room(this, ix, iy, scale, random.nextInt(2));
+			ix=rooms[i].exitx;
+			iy=rooms[i].exity;
+		}
+
 		for(int i=0;i<roomq;i++){
 			rooms[i].generate_exit();
 		}
@@ -124,7 +124,9 @@ public class Main extends ApplicationAdapter {
 		e[id].enemy=false;
 		e[id].x=rooms[0].x*stepb+200;
 		e[id].y=rooms[0].y*stepb+220;
-
+		for(ix=0;ix<FX;ix++){
+			F[ix][0].t=0;
+		}
 
 		//RoomGenerator generatorr = new RoomGenerator();
 		//List<Room> rooms = generatorr.generateRooms(10);
@@ -242,7 +244,7 @@ public class Main extends ApplicationAdapter {
 			ix+=vx;
 			iy+=vy;
 			for(int i=0;i<eq;i++){
-				if(e[i].state!=3){
+				if(e[i].state!=3&&e[i].id!=id){
 					if(hit(ix, iy, 5, e[i].x, e[i].y,  fx*step)){
 						boolean access=false;
 						int px=0, py=0;
@@ -263,7 +265,11 @@ public class Main extends ApplicationAdapter {
 							time/=20;
 							int[][] fs = f[e[i].a];
 							if(e[i].enemy){
-								fs=f[e[i].a+23];
+								if(e[i].t==0) {
+									fs = f[e[i].a + 23];
+								}else{
+									fs = f[e[i].a];
+								}
 							}
 							set_part(px, py, i, -r+90, fs, false, 0);
 							set_part(px, py, i, -r - 180+90, fs, false, 0);

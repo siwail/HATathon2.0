@@ -1,10 +1,12 @@
 package com.meme.slayer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Entity {
     Main g;
     float x=520, y=800, lx=0, ly=0, vx=0, vy=0, r=90, lr=0;
+    int t=1;
     int state=3, a=0, a1=4, a2=11, a3=18;
     int next=10, next1=3, next2=3, next3=3;
     int dir=1, dir1=1, dir2=1, dir3=1;
@@ -60,13 +62,18 @@ public class Entity {
                     }
                 }
             }else{
-                next--;
-                if (next == 0) {
-                    next = 10;
-                    a += 1;
-                    if (a > 2) {
-                        a = 0;
+                if(t==0) {
+                    next--;
+                    if (next == 0) {
+                        next = 10;
+                        a += 1;
+                        if (a > 2) {
+                            a = 0;
+                        }
                     }
+                }else {
+                    r=180;
+                    a = 46+t;
                 }
             }
             vy-=0.5f;
@@ -136,6 +143,9 @@ public class Entity {
         if(state!=3) {
             if (!enemy) {
                     float dirx=x+ g.step*16*direct*-1;
+                    if(g.id!=id){
+                        dirx=x;
+                    }
                     for (int ix = 0; ix < g.fx; ix++) {
                         for (int iy = 0; iy < g.fy; iy++) {
                             if (g.f[a][ix][iy] != -1) {
@@ -246,58 +256,66 @@ public class Entity {
                         }
                     }
                 }
-            }else{
-                for (int ix = 0; ix < g.fx; ix++) {
-                    for (int iy = 0; iy < g.fy; iy++) {
-                        if (g.f[a+23][ix][iy] != -1) {
-                            if (g.f[a+23][ix][iy] == 0) {
-                                g.drawer.setColor(0, 0, 0, 1);
-                            }
-                            if (g.f[a+23][ix][iy] == 1) {
-                                g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
-                            }
-                            if (g.f[a+23][ix][iy] == 2) {
-                                g.drawer.setColor(1, 1, 1, 1);
-                            }
-                            float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p2x = -g.cx + x + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p3x = -g.cx + x + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p4x = -g.cx + x + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
-                            g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
+            }else {
+                if (t == 0) {
+                    for (int ix = 0; ix < g.fx; ix++) {
+                        for (int iy = 0; iy < g.fy; iy++) {
+                            if (g.f[a + 23][ix][iy] != -1) {
+                                if (g.f[a + 23][ix][iy] == 0) {
+                                    g.drawer.setColor(0, 0, 0, 1);
+                                }
+                                if (g.f[a + 23][ix][iy] == 1) {
+                                    g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
+                                }
+                                if (g.f[a + 23][ix][iy] == 2) {
+                                    g.drawer.setColor(1, 1, 1, 1);
+                                }
+                                float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p2x = -g.cx + x + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p3x = -g.cx + x + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p4x = -g.cx + x + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
+                                g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
 
+                            }
                         }
                     }
-                }
-                for (int ix = 0; ix < g.fx; ix++) {
-                    for (int iy = 0; iy < g.fy; iy++) {
-                        if (g.f[26][ix][iy] != -1) {
-                            if (g.f[26][ix][iy] == 0) {
-                                g.drawer.setColor(0, 0, 0, 1);
-                            }
-                            if (g.f[26][ix][iy] == 1) {
-                                g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
-                            }
-                            if (g.f[26][ix][iy] == 2) {
-                                g.drawer.setColor(1, 1, 1, 1);
-                            }
-                            float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p2x = -g.cx + x + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p3x = -g.cx + x + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            float p4x = -g.cx + x + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
-                            float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
-                            g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
-                            g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
+                    for (int ix = 0; ix < g.fx; ix++) {
+                        for (int iy = 0; iy < g.fy; iy++) {
+                            if (g.f[26][ix][iy] != -1) {
+                                if (g.f[26][ix][iy] == 0) {
+                                    g.drawer.setColor(0, 0, 0, 1);
+                                }
+                                if (g.f[26][ix][iy] == 1) {
+                                    g.drawer.setColor(0.2f, 0.2f, 0.2f, 1);
+                                }
+                                if (g.f[26][ix][iy] == 2) {
+                                    g.drawer.setColor(1, 1, 1, 1);
+                                }
+                                float p1x = -g.cx + x + g.sin(r + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p1y = -g.cy + y + g.cos(r + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p2x = -g.cx + x + g.sin(r + 90 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p2y = -g.cy + y + g.cos(r + 90 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p3x = -g.cx + x + g.sin(r + 180 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p3y = -g.cy + y + g.cos(r + 180 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                float p4x = -g.cx + x + g.sin(r + 270 + 45) * g.step + g.sin(r) * g.step * ix + g.sin(r + 90) * g.step * iy;
+                                float p4y = -g.cy + y + g.cos(r + 270 + 45) * g.step + g.cos(r) * g.step * ix + g.cos(r + 90) * g.step * iy;
+                                g.drawer.triangle(p1x, p1y, p2x, p2y, p3x, p3y);
+                                g.drawer.triangle(p1x, p1y, p4x, p4y, p3x, p3y);
 
+                            }
                         }
                     }
+                }else{
+                    g.drawer.end();
+                    g.batch.begin();
+                    g.batch.draw(g.meme[t-1], -g.cx+x, -g.cy+y-g.fy*g.step, -g.fx*g.step, g.fy*g.step);
+                    g.batch.end();
+                    g.drawer.begin(ShapeRenderer.ShapeType.Filled);
                 }
             }
         }

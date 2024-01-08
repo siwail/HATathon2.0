@@ -43,7 +43,7 @@ public class Room {
             g.frect(x+20, y+20, x+30, y+30, 0);
         }
 
-        g.set_entity(x+25*g.stepb,y+10*g.stepb);
+        g.set_entity((x+20)*g.stepb,(y+10)*g.stepb);
 
     }
     public void generate_exit(){
