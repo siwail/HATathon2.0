@@ -41,7 +41,7 @@ public class Main extends ApplicationAdapter {
 	float stepb=20;
 	float gow=0,gos=0,goa=0,god=0;
 	int id=0;
-	int heal=5;
+	int heal=6;
 	Entity[] e = new Entity[eq];
 	Slice[] s = new Slice[sq];
 	Part[] p = new Part[pq];
@@ -49,6 +49,7 @@ public class Main extends ApplicationAdapter {
 	int FX=500;
 	int FY=500;
 	Frame[][] F = new Frame[FX][FY];
+	Frame[][] FB = new Frame[FX][FY];
 	int roomq=50;
 	Room[] rooms = new Room[roomq];
 	int pilq=50;
@@ -109,7 +110,9 @@ public class Main extends ApplicationAdapter {
 		for(int ix=0;ix<FX;ix++){
 			for(int iy=0;iy<FY;iy++){
 				F[ix][iy] = new Frame();
-				F[ix][iy].t=0;
+				FB[ix][iy] = new Frame();
+				F[ix][iy].t=random.nextInt(13);
+				FB[ix][iy].t=random.nextInt(13)+45;
 			}
 		}
 		for (int i=0;i<eq;i++){
@@ -511,6 +514,20 @@ public class Main extends ApplicationAdapter {
 			}
 			batch.end();
 			drawer.begin(ShapeRenderer.ShapeType.Filled);
+
+			int minx = Math.min(Math.max((int) (cx / stepb - 1), 0), FX);
+			int miny = Math.min(Math.max((int) (cy / stepb - 1), 0), FY);
+			int maxx = Math.min(Math.max((int) ((cx + w) / stepb + 1), 0), FX);
+			int maxy = Math.min(Math.max((int) ((cy + h) / stepb + 1), 0), FY);
+			for (int ix = minx; ix < maxx; ix++) {
+				for (int iy = miny; iy < maxy; iy++) {
+					if (F[ix][iy].t == -1) {
+						drawer.setColor(FB[ix][iy].t / 255f, FB[ix][iy].t / 255f, FB[ix][iy].t / 255f, 0);
+						drawer.rect(-cx + ix * stepb, -cy + iy * stepb, stepb, stepb);
+					}
+				}
+			}
+
 			for (int i = 0; i < eq; i++) {
 				e[i].draw();
 			}
@@ -523,14 +540,10 @@ public class Main extends ApplicationAdapter {
 			for (int i = 0; i < sq; i++) {
 				s[i].draw();
 			}
-			int minx = Math.min(Math.max((int) (cx / stepb - 1), 0), FX);
-			int miny = Math.min(Math.max((int) (cy / stepb - 1), 0), FY);
-			int maxx = Math.min(Math.max((int) ((cx + w) / stepb + 1), 0), FX);
-			int maxy = Math.min(Math.max((int) ((cy + h) / stepb + 1), 0), FY);
 			for (int ix = minx; ix < maxx; ix++) {
 				for (int iy = miny; iy < maxy; iy++) {
 					if (F[ix][iy].t != -1) {
-						drawer.setColor(0, 0, 0, 0);
+						drawer.setColor(F[ix][iy].t/255f, F[ix][iy].t/255f, F[ix][iy].t/255f, 0);
 						drawer.rect(-cx + ix * stepb, -cy + iy * stepb, stepb, stepb);
 					}
 				}
