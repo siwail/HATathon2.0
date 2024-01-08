@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Random;
 public class Main extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -30,11 +31,14 @@ public class Main extends ApplicationAdapter {
 	int[][][] f;
 	int eq=20, pq=1000, sq=100, bq=1000;
 	float step=5;
+	float stepb=20;
 	Entity[] e = new Entity[eq];
 	Slice[] s = new Slice[sq];
 	Part[] p = new Part[pq];
 	Blood[] b = new Blood[bq];
-	
+	int FX=200;
+	int FY=200;
+	Frame[][] F = new Frame[FX][FY];
 	@Override
 	public void create () {
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
@@ -69,6 +73,17 @@ public class Main extends ApplicationAdapter {
 			}
 			j++;
 		}
+		for(int ix=0;ix<FX;ix++){
+			for(int iy=0;iy<FY;iy++){
+				F[ix][iy] = new Frame();
+				F[ix][iy].t=-1;
+				if(iy<5){
+					F[ix][iy].t=0;
+				}
+			}
+		}
+		RoomGenerator generatorr = new RoomGenerator();
+		List<Room> rooms = generatorr.generateRooms(10);
 		for (int i=0;i<eq;i++){
 			e[i]=new Entity(this);
 			e[i].x=i*100;
@@ -313,7 +328,14 @@ public class Main extends ApplicationAdapter {
 		for (int i = 0; i < sq; i++) {
 			s[i].draw();
 		}
-
+		for(int ix=0;ix<FX;ix++){
+			for(int iy=0;iy<FY;iy++){
+				if(F[ix][iy].t!=-1) {
+					drawer.setColor(0, 0, 0, 0);
+					drawer.rect(-cx+ix*stepb, -cy+iy*stepb, stepb, stepb);
+				}
+			}
+		}
 		drawer.end();
 		batch.begin();
 		batch.end();
