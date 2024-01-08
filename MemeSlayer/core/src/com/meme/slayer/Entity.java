@@ -107,7 +107,9 @@ public class Entity {
                     if (g.e[i].state != 3 && g.e[i].id != g.id && g.hit(x, y, 50, g.e[i].x, g.e[i].y, 50) && damaged == 0) {
                         damaged = 50;
                         g.heal--;
-
+                        if(g.heal<=0){
+                            Gdx.app.exit();
+                        }
                     }
                 }
             }

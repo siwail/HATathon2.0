@@ -25,6 +25,7 @@ public class Main extends ApplicationAdapter {
 	Texture[] office = new Texture[5];
 	Texture[] meme = new Texture[5];
 	Texture u, he;
+	Texture[] pila = new Texture[3];
 	float w, h;
 	float time=1;
 	float cx=0, cy=0;
@@ -48,11 +49,22 @@ public class Main extends ApplicationAdapter {
 	Frame[][] F = new Frame[FX][FY];
 	int roomq=50;
 	Room[] rooms = new Room[roomq];
+	int pilq=50;
+	int pils=0;
+	float[] pilx=new float[pilq];
+	float[] pily=new float[pilq];
+	float[] pilse=new float[pilq];
+	int an=0;
+	int and=0;
+	int q=0;
 	@Override
 	public void create () {
 		for(int i=0;i<5;i++) {
 			office[i] = new Texture("office_"+(i+1)+".png");
 			meme[i] = new Texture((i+1)+".png");
+		}
+		for(int i=0;i<3;i++) {
+			pila[i] = new Texture("New"+(i+1)+".png");
 		}
 		u = new Texture("u.png");
 		he = new Texture("h.png");
@@ -119,11 +131,13 @@ public class Main extends ApplicationAdapter {
 			rooms[i]= new Room(this, ix, iy, scale, random.nextInt(2));
 			ix=rooms[i].exitx;
 			iy=rooms[i].exity;
+			q++;
 		}
 
 		for(int i=0;i<roomq;i++){
 			rooms[i].generate_exit();
 		}
+
 		e[id].state=0;
 		e[id].enemy=false;
 		e[id].x=rooms[0].x*stepb+200;
@@ -222,7 +236,7 @@ public class Main extends ApplicationAdapter {
 			}
 			@Override
 			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-				slay(screenX+cx, h-screenY+cy);
+				slay(screenX+cx, h-screenY+cy, ax, ay);
 				mx=-1;
 				my=-1;
 				ax=-1;
@@ -278,7 +292,7 @@ public class Main extends ApplicationAdapter {
 			}
 		});
 	}
-	public void slay(float x, float y){
+	public void slay(float x, float y, float ax, float ay){
 		float r=(90+(float)(Math.atan2(-(y-ay), (x-ax))/Math.PI*180))%360;
 		float vx=sin(r);
 		float vy=cos(r);
@@ -288,8 +302,12 @@ public class Main extends ApplicationAdapter {
 			ix+=vx;
 			iy+=vy;
 			for(int i=0;i<eq;i++){
-				if(e[i].state!=3&&e[i].id!=id){
+				if(e[i].state!=3){
 					if(hit(ix, iy, 5, e[i].x, e[i].y,  fx*step)){
+						if(i==id) {
+							Gdx.app.exit();
+						}
+
 						boolean access=false;
 						int px=0, py=0;
 						for (;px < fx&&!access; px++) {
@@ -300,7 +318,6 @@ public class Main extends ApplicationAdapter {
 									float p1y = e[i].y + cos(e[i].r + 45) * step/2 + cos(e[i].r) * step * px + cos(e[i].r + 90) * step * py;
 									if(hit(p1x, p1y, step, ix, iy, 5)){
 										access=true;
-
 									}
 								}
 							}
@@ -432,6 +449,23 @@ public class Main extends ApplicationAdapter {
 	}
 	@Override
 	public void render () {
+		if(and==0) {
+			for (int i = 0; i < pils; i++) {
+				if (hit(pilx[i], pily[i], h/2, e[id].x, e[id].y, h/2)) {
+					float r = random.nextInt(360);
+					slay(pilx[i] + sin(r) * pilse[i]/2, pily[i] + cos(r) * pilse[i]/2, pilx[i] - sin(r) * pilse[i]/2, pily[i] - cos(r) * pilse[i]/2);
+				}
+			}
+		}
+		and++;
+		if(and>10){
+			and=0;
+		}
+
+		an++;
+		if(an>2){
+			an=0;
+		}
 		time+=(1-time)/100;
 		cx+=w/2;
 		cy+=h/2;
@@ -484,6 +518,9 @@ public class Main extends ApplicationAdapter {
 		}
 		drawer.end();
 		batch.begin();
+		for(int i=0;i<pils;i++){
+			batch.draw(pila[an], -cx+pilx[i]-pilse[i]/2, -cy+pily[i]-pilse[i]/2, pilse[i], pilse[i]);
+		}
 		batch.draw(u, 0, 0, 400, 400);
 		for(int i=0;i<heal;i++){
 			batch.draw(he, i*100, h-100, 100, 50);

@@ -43,8 +43,16 @@ public class Room {
             g.frect(x+20, y+20, x+30, y+30, 0);
         }
 
-        g.set_entity((x+20)*g.stepb,(y+10)*g.stepb);
+        if(g.q!=0) {
+            if (g.random.nextInt(2) == 0 && g.pils < g.pilq) {
+                g.pilx[g.pils] = (x + 20 + g.random.nextInt(13) - 6) * g.stepb;
+                g.pily[g.pils] = (y + 20 + g.random.nextInt(13) - 6) * g.stepb;
+                g.pilse[g.pils] = (g.random.nextInt(50) + 10) * g.step;
+                g.pils++;
+            }
 
+            g.set_entity((x + 20) * g.stepb, (y + 10) * g.stepb);
+        }
     }
     public void generate_exit(){
         if(exit==0){
