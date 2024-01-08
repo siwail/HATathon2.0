@@ -24,6 +24,7 @@ public class Main extends ApplicationAdapter {
 	BitmapFont font;
 	Texture[] office = new Texture[5];
 	Texture[] meme = new Texture[5];
+	Texture u;
 	float w, h;
 	float time=1;
 	float cx=0, cy=0;
@@ -52,6 +53,7 @@ public class Main extends ApplicationAdapter {
 			office[i] = new Texture("office_"+(i+1)+".png");
 			meme[i] = new Texture((i+1)+".png");
 		}
+		u = new Texture("u.png");
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		random = new Random();
 		w=Gdx.graphics.getWidth();
@@ -198,6 +200,26 @@ public class Main extends ApplicationAdapter {
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 				ax=screenX+cx;
 				ay=h-screenY+cy;
+				if(hit(screenX, h-screenY, 100, 100, 200, 100)){
+					goa=-3;
+					e[id].direct=-1;
+				}
+				if(hit(screenX, h-screenY, 100, 300, 200, 100)){
+					god=3;
+					e[id].direct=1;
+				}
+				if(hit(screenX, h-screenY, 100, 200, 300, 100)){
+					gow=3;
+				}
+				if(hit(screenX, h-screenY, 100, 200, 100, 100)){
+					gos=-3;
+				}
+				if(hit(screenX, h-screenY, 50, 200, 200, 50)){
+					if(e[id].spaced){
+						e[id].vy+=30;
+					}
+				}
+
 				return false;
 			}
 			@Override
@@ -207,6 +229,10 @@ public class Main extends ApplicationAdapter {
 				my=-1;
 				ax=-1;
 				ay=-1;
+				gow=0;
+				goa=0;
+				gos=0;
+				god=0;
 				return false;
 			}
 			@Override
@@ -440,6 +466,7 @@ public class Main extends ApplicationAdapter {
 		}
 		drawer.end();
 		batch.begin();
+		batch.draw(u, 0, 0, 400, 400);
 		batch.end();
 	}
 	public float sin(float v){
