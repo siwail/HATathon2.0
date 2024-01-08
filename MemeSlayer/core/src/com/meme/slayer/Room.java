@@ -36,11 +36,15 @@ public class Room {
         }
 
         if(t==0){
-
+            g.frect(x+10, y+30, x+15, y+32, 0);
+            g.frect(x+30, y+30, x+45, y+32, 0);
         }
         if(t==1){
-
+            g.frect(x+20, y+20, x+30, y+30, 0);
         }
+
+        g.set_entity(x+25*g.stepb,y+10*g.stepb);
+
     }
     public void generate_exit(){
         if(exit==0){

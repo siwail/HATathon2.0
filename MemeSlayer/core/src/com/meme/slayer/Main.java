@@ -32,11 +32,11 @@ public class Main extends ApplicationAdapter {
 	int fx=32;
 	int fy=32;
 	int[][][] f;
-	int eq=20, pq=1000, sq=100, bq=1000;
+	int eq=100, pq=1000, sq=100, bq=1000;
 	float step=5;
 	float stepb=20;
 	float gow=0,gos=0,goa=0,god=0;
-	int id=0;
+	int id=2;
 	Entity[] e = new Entity[eq];
 	Slice[] s = new Slice[sq];
 	Part[] p = new Part[pq];
@@ -44,7 +44,7 @@ public class Main extends ApplicationAdapter {
 	int FX=500;
 	int FY=500;
 	Frame[][] F = new Frame[FX][FY];
-	int roomq=3;
+	int roomq=20;
 	Room[] rooms = new Room[roomq];
 	@Override
 	public void create () {
@@ -90,6 +90,9 @@ public class Main extends ApplicationAdapter {
 
 			}
 		}
+		for (int i=0;i<eq;i++) {
+			e[i] = new Entity(this);
+		}
 		int scale=50;
 		int ix=200;
 		int iy=200;
@@ -98,13 +101,7 @@ public class Main extends ApplicationAdapter {
 			ix=rooms[i].exitx;
 			iy=rooms[i].exity;
 		}
-		for(int i=0;i<roomq;i++){
-			rooms[i].generate_exit();
-		}
-		//RoomGenerator generatorr = new RoomGenerator();
-		//List<Room> rooms = generatorr.generateRooms(10);
 		for (int i=0;i<eq;i++){
-			e[i]=new Entity(this);
 			e[i].x=i*100+100;
 			int m = random.nextInt(3);
 			if(m==0){
@@ -118,11 +115,20 @@ public class Main extends ApplicationAdapter {
 			}
 			e[i].enemy=random.nextBoolean();
 			e[i].id=i;
+			e[i].state=3;
 		}
-		e[id].enemy=false;
+		for(int i=0;i<roomq;i++){
+			rooms[i].generate_exit();
+		}
 		e[id].state=0;
+		e[id].enemy=false;
 		e[id].x=rooms[0].x*stepb+200;
 		e[id].y=rooms[0].y*stepb+220;
+
+
+		//RoomGenerator generatorr = new RoomGenerator();
+		//List<Room> rooms = generatorr.generateRooms(10);
+
 		for (int i=0;i<sq;i++){
 			s[i]=new Slice(this);
 		}
@@ -146,7 +152,7 @@ public class Main extends ApplicationAdapter {
 				Gdx.app.log(""+keycode, "");
 				if(keycode==62){
 					if(e[id].spaced){
-						e[id].vy+=20;
+						e[id].vy+=30;
 					}
 				}
 				if(keycode==51){
@@ -298,6 +304,22 @@ public class Main extends ApplicationAdapter {
 			}
 		}
 	}
+	public void set_entity(float x, float y) {
+		boolean access = false;
+		int index = 0;
+		for (int i2 = 0; i2 < eq; i2++) {
+			if (e[i2].state == 3) {
+				index = i2;
+				access = true;
+				break;
+			}
+		}
+		if (access) {
+			e[index].state=0;
+			e[index].x=x;
+			e[index].y=y;
+		}
+	}
 	public void set_part(int x, int y, int i, float r, int[][] f, boolean part, float vy){
 		boolean access=false;
 		int index=0;
@@ -382,7 +404,7 @@ public class Main extends ApplicationAdapter {
 		ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
 		batch.begin();
 		for(int i=0;i<roomq;i++){
-			batch.draw(office[rooms[i].t], -cx+rooms[i].x*stepb, -cy+rooms[i].y*stepb, stepb*rooms[i].s, stepb*rooms[i].s);
+		//	batch.draw(office[rooms[i].t], -cx+rooms[i].x*stepb, -cy+rooms[i].y*stepb, stepb*rooms[i].s, stepb*rooms[i].s);
 		}
 		batch.end();
 		drawer.begin(ShapeRenderer.ShapeType.Filled);

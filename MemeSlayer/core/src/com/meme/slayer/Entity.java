@@ -73,6 +73,8 @@ public class Entity {
             if(id==g.id) {
                 vx += g.goa + g.god;
             }
+            //r+=(90-r)/5f;
+            //r-=vx/10;
             vx+=(-vx)/5;
             lx=x;
             ly=y;
@@ -80,30 +82,52 @@ public class Entity {
             y+=vy;
             spaced=false;
 
+
+            int px5 = (int) (x / g.stepb)+3;
+            int py5 = (int) (y / g.stepb)-6;
+            if (g.act(px5, py5) && g.F[px5][py5].t != -1) {
+                x = lx;
+                x-=2;
+                vx = -vx / 2;
+            }
+            int px6 = (int) (x / g.stepb)-3;
+            int py6 = (int) (y / g.stepb)-6;
+            if (g.act(px6, py6) && g.F[px6][py6].t != -1) {
+                x = lx;
+                x+=2;
+                vx = -vx / 2;
+            }
+
+
             int px1 = (int) (x / g.stepb)+3;
-            int py1 = (int) (y / g.stepb)-10;
+            int py1 = (int) (y / g.stepb)+4;
             if (g.act(px1, py1) && g.F[px1][py1].t != -1) {
                 x = lx;
+                x-=2;
                 vx = -vx / 2;
             }
             int px2 = (int) (x / g.stepb)-3;
-            int py2 = (int) (y / g.stepb)-10;
+            int py2 = (int) (y / g.stepb)+4;
             if (g.act(px2, py2) && g.F[px2][py2].t != -1) {
                 x = lx;
+
+                x+=2;
                 vx = -vx / 2;
             }
             int px3 = (int) (x / g.stepb);
             int py3 = (int) (y / g.stepb)-8;
             if (g.act(px3, py3) && g.F[px3][py3].t != -1) {
                 y = ly;
-                vy = -vy / 2;
+                vy = -vy / 4;
                 spaced=true;
             }
             int px4 = (int) (x / g.stepb);
-            int py4 = (int) (y / g.stepb)+8;
+            int py4 = (int) (y / g.stepb)+2;
             if (g.act(px4, py4) && g.F[px4][py4].t != -1) {
+
                 y = ly;
-                vy = -vy / 2;
+                y-=2;
+                vy = -vy / 8;
 
             }
         }
