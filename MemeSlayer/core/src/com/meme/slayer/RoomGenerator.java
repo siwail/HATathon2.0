@@ -8,9 +8,9 @@ class RoomGenerator {
 
     public List<Room> generateRooms(int count) {
         List<Room> rooms = new ArrayList<>();
-        Room previousRoom = null;
+       /* Room previousRoom = null;
 
-        /*for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             Room currentRoom = new Room(previousRoom != null ? previousRoom.getSides() : null);
             currentRoom.generateExits();
             rooms.add(currentRoom);

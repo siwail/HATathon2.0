@@ -38,9 +38,11 @@ public class Main extends ApplicationAdapter {
 	Slice[] s = new Slice[sq];
 	Part[] p = new Part[pq];
 	Blood[] b = new Blood[bq];
-	int FX=200;
-	int FY=200;
+	int FX=500;
+	int FY=500;
 	Frame[][] F = new Frame[FX][FY];
+	int roomq=10;
+	Room[] rooms = new Room[roomq];
 	@Override
 	public void create () {
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
@@ -84,8 +86,17 @@ public class Main extends ApplicationAdapter {
 				}
 			}
 		}
+		int scale=100;
+		int ix=0;
+		int iy=0;
+		int last_exit=-1;
+		for(int i=0;i<roomq;i++){
+			rooms[i]= new Room(this, ix, iy, scale, random.nextInt(2));
+			ix=rooms[i].exitx;
+			iy=rooms[i].exity;
+		}
 		RoomGenerator generatorr = new RoomGenerator();
-		List<Room> rooms = generatorr.generateRooms(10);
+		//List<Room> rooms = generatorr.generateRooms(10);
 		for (int i=0;i<eq;i++){
 			e[i]=new Entity(this);
 			e[i].x=i*100;
@@ -101,6 +112,7 @@ public class Main extends ApplicationAdapter {
 				e[i].state3=1;
 			}
 			e[i].enemy=random.nextBoolean();
+			e[i].id=i;
 		}
 		for (int i=0;i<sq;i++){
 			s[i]=new Slice(this);
@@ -111,6 +123,7 @@ public class Main extends ApplicationAdapter {
 		for (int i=0;i<pq;i++){
 			p[i]=new Part(this);
 		}
+
 		drawer = new ShapeRenderer();
 		batch = new SpriteBatch();
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
@@ -122,6 +135,11 @@ public class Main extends ApplicationAdapter {
 			@Override
 			public boolean keyDown(int keycode) {
 				Gdx.app.log(""+keycode, "");
+				if(keycode==62){
+					if(e[id].spaced){
+						e[id].vy+=20;
+					}
+				}
 				if(keycode==51){
 					gow=1;
 				}
@@ -161,13 +179,13 @@ public class Main extends ApplicationAdapter {
 
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				ax=screenX;
-				ay=h-screenY;
+				ax=screenX+cx;
+				ay=h-screenY+cy;
 				return false;
 			}
 			@Override
 			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-				slay(screenX, h-screenY);
+				slay(screenX+cx, h-screenY+cy);
 				mx=-1;
 				my=-1;
 				ax=-1;
@@ -412,4 +430,14 @@ public class Main extends ApplicationAdapter {
 	public boolean act(int x, int y){
 		return x<FX&&y<FY&&x>-1&&y>-1;
 	}
+	public void frect(int x1, int y1, int x2, int y2, int t){
+		for(int ix=x1;ix<x2+1;ix++){
+			for(int iy=y1;iy<y2+1;iy++){
+				if(act(ix, iy)){
+					F[ix][iy].t=t;
+				}
+			}
+		}
+	}
+
 }

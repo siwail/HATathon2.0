@@ -23,7 +23,7 @@ public class Blood {
     }
     public void draw() {
         if (state != 3) {
-            g.drawer.setColor(0.6f, 0.5f, 0, 1);
+            g.drawer.setColor(0.6f, 0.1f, 0, 1);
             g.drawer.rect(-g.cx+x, -g.cy+y, s, s);
         }
     }

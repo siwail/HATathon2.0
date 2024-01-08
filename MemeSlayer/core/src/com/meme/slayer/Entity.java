@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx;
 
 public class Entity {
     Main g;
-    float x=500, y=800, lx=0, ly=0, vx=0, vy=0, r=90, lr=0;
+    float x=520, y=600, lx=0, ly=0, vx=0, vy=0, r=90, lr=0;
     int state=3, a=0, a1=4, a2=11, a3=18;
     int next=10, next1=3, next2=3, next3=3;
     int dir=1, dir1=1, dir2=1, dir3=1;
     int state1=0, state2=0, state3=0;
+    int id=0;
     boolean enemy=true;
     boolean spaced=false;
     public Entity(Main game){
@@ -68,30 +69,45 @@ public class Entity {
                 }
             }
             vy-=0.5f;
-            vx+=g.goa+g.god;
-            vy+=g.gow+g.gos;
+            if(id==g.id) {
+                vx += g.goa + g.god;
+                vy += g.gow + g.gos;
+            }
             vx+=(-vx)/10;
             lx=x;
             ly=y;
             x+=vx;
             y+=vy;
             spaced=false;
-            for(int ix=-8;ix<8;ix++) {
-                for(int iy=-8;iy<8;iy++) {
-                    int px = (int) (x / g.stepb)+ix;
-                    int py = (int) (y / g.stepb)+iy;
-                    if (g.act(px, py) && g.F[px][py].t != -1) {
-                        x = lx;
-                        y = ly+1;
-                        vx = -vx / 2;
-                        vy = -vy / 2;
-                        ix=8;
-                        iy=8;
-                        spaced=true;
-                    }
-                }
-            }
 
+            int px1 = (int) (x / g.stepb)+8;
+            int py1 = (int) (y / g.stepb);
+            if (g.act(px1, py1) && g.F[px1][py1].t != -1) {
+                x = lx;
+                vx = -vx / 2;
+                spaced=true;
+            }
+            int px2 = (int) (x / g.stepb)-8;
+            int py2 = (int) (y / g.stepb);
+            if (g.act(px2, py2) && g.F[px2][py2].t != -1) {
+                x = lx;
+                vx = -vx / 2;
+                spaced=true;
+            }
+            int px3 = (int) (x / g.stepb);
+            int py3 = (int) (y / g.stepb)-8;
+            if (g.act(px3, py3) && g.F[px3][py3].t != -1) {
+                y = ly;
+                vy = -vy / 2;
+                spaced=true;
+            }
+            int px4 = (int) (x / g.stepb);
+            int py4 = (int) (y / g.stepb)+8;
+            if (g.act(px4, py4) && g.F[px4][py4].t != -1) {
+                y = ly;
+                vy = -vy / 2;
+
+            }
         }
     }
     public void draw(){
