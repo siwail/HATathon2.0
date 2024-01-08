@@ -32,6 +32,7 @@ public class Main extends ApplicationAdapter {
 	int eq=20, pq=1000, sq=100, bq=1000;
 	float step=5;
 	float stepb=20;
+	int id=0;
 	Entity[] e = new Entity[eq];
 	Slice[] s = new Slice[sq];
 	Part[] p = new Part[pq];
@@ -302,6 +303,12 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void render () {
 		time+=(1-time)/100;
+		cx+=w/2;
+		cy+=h/2;
+		cx+=(e[id].x-cx)/20f;
+		cy+=(e[id].y-cy)/20f;
+		cx-=w/2;
+		cy-=h/2;
 		for (int i = 0; i < eq; i++) {
 			e[i].math();
 		}
@@ -377,5 +384,8 @@ public class Main extends ApplicationAdapter {
 			}
 		}
 		return gy;
+	}
+	public boolean act(int x, int y){
+		return x<FX&&y<FY&&x>-1&&y>-1;
 	}
 }
